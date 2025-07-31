@@ -74,20 +74,20 @@
 </head>
 <body>
   <h1>Calculadora de avanço</h1>
-
-  <label for="rank">Ranking na Qualificação (ex: 1 para 1º lugar):</label>
+ <label for="rank">Ranking na Qualificação (ex: 1 para 1º lugar):</label>
   <input type="number" id="rank" min="1">
 
   <label for="numTeams">Número de times no evento:</label>
   <input type="number" id="numTeams" min="2">
 
-  <label for="allianceNumber">Número da Aliança (1 para a melhor aliança):</label>
+  <label for="allianceNumber">Número da Aliança (1 para a melhor aliança, em branco caso não tenha participado dos playoffs):</label>
   <input type="number" id="allianceNumber" min="1" max="20">
 
-  <label for="isCaptain">Você é capitão da aliança?</label>
+  <label for="isCaptain">Participação na aliança:</label>
   <select id="isCaptain">
-    <option value="yes">Sim</option>
-    <option value="no">Não</option>
+    <option value="captain">Capitão</option>
+    <option value="picked">Escolhido por outra equipe</option>
+    <option value="none">Não participou de nenhuma aliança</option>
   </select>
 
   <label for="playoffResult">Resultado nos Playoffs:</label>
@@ -123,11 +123,11 @@
       const rank = parseInt(document.getElementById("rank").value);
       const numTeams = parseInt(document.getElementById("numTeams").value);
       const allianceNumber = parseInt(document.getElementById("allianceNumber").value);
-      const isCaptain = document.getElementById("isCaptain").value === "yes";
+      const participation = document.getElementById("isCaptain").value;
       const playoffPoints = parseInt(document.getElementById("playoffResult").value);
       const judgedAwardPoints = parseInt(document.getElementById("judgedAward").value);
 
-      if (isNaN(rank) || isNaN(numTeams) || isNaN(allianceNumber)) {
+      if (isNaN(rank) || isNaN(numTeams)) {
         document.getElementById("resultado").innerText = "Por favor, preencha todos os campos obrigatórios.";
         return;
       }
@@ -136,10 +136,17 @@
         ((16 - 2) * ((numTeams - rank) / (numTeams - 1))) + 2
       );
 
-      const alliancePoints = 21 - allianceNumber;
-      const allianceTotal = alliancePoints;
+      let alliancePoints = 0;
 
-      const totalPoints = qualificationPoints + allianceTotal + playoffPoints + judgedAwardPoints;
+      if (participation !== "none") {
+        if (isNaN(allianceNumber)) {
+          document.getElementById("resultado").innerText = "Insira o número da aliança.";
+          return;
+        }
+        alliancePoints = 21 - allianceNumber;
+      }
+
+      const totalPoints = qualificationPoints + alliancePoints + playoffPoints + judgedAwardPoints;
 
       document.getElementById("resultado").innerText =
         `Pontuação Total de Avanço: ${totalPoints} pontos`;
