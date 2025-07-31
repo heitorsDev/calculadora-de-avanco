@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de avanço</title>
+  <style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+    body {
+       font-family: "Nunito", sans-serif;
+        background: #f8f4ff;
+      color: #2e004f;
+      padding: 30px;
+      max-width: 650px;
+      margin: auto;
+    }
+
+    h1 {
+        font-weight: bold;
+      text-align: center;
+      color: #5a189a;
+      font-size: 1.8em;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #d0b3f0;
+      margin-top: 4px;
+      background-color: #ffffff;
+      color: #2e004f;
+    }
+
+    button {
+      background-color: #7209b7;
+      color: white;
+      border: none;
+      padding: 12px;
+      margin-top: 24px;
+      border-radius: 6px;
+      font-size: 1em;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #5a189a;
+    }
+
+    .result {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-top: 30px;
+      text-align: center;
+      color: #3c096c;
+    }
+
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Calculadora de avanço</h1>
+
+  <label for="rank">Ranking na Qualificação (ex: 1 para 1º lugar):</label>
+  <input type="number" id="rank" min="1">
+
+  <label for="numTeams">Número de times no evento:</label>
+  <input type="number" id="numTeams" min="2">
+
+  <label for="allianceNumber">Número da Aliança (1 para a melhor aliança):</label>
+  <input type="number" id="allianceNumber" min="1" max="20">
+
+  <label for="isCaptain">Você é capitão da aliança?</label>
+  <select id="isCaptain">
+    <option value="yes">Sim</option>
+    <option value="no">Não</option>
+  </select>
+
+  <label for="playoffResult">Resultado nos Playoffs:</label>
+  <select id="playoffResult">
+    <option value="0">Eliminado cedo</option>
+    <option value="5">4º Lugar</option>
+    <option value="10">3º Lugar</option>
+    <option value="20">2º Lugar</option>
+    <option value="40">Campeão</option>
+  </select>
+
+  <label for="judgedAward">Prêmio Julgado Recebido:</label>
+  <select id="judgedAward">
+    <option value="0">Nenhum</option>
+    <option value="60">Inspire Award - 1º</option>
+    <option value="30">Inspire Award - 2º</option>
+    <option value="15">Inspire Award - 3º</option>
+    <option value="12">Outro Prêmio - 1º Lugar</option>
+    <option value="6">Outro Prêmio - 2º Lugar</option>
+    <option value="3">Outro Prêmio - 3º Lugar</option>
+  </select>
+
+  <button onclick="calcularPontos()">Calcular Pontuação Total</button>
+
+  <div class="result" id="resultado"></div>
+
+  <footer>
+    Desenvolvido por UNIMATE FTC #24557
+  </footer>
+
+  <script>
+    function calcularPontos() {
+      const rank = parseInt(document.getElementById("rank").value);
+      const numTeams = parseInt(document.getElementById("numTeams").value);
+      const allianceNumber = parseInt(document.getElementById("allianceNumber").value);
+      const isCaptain = document.getElementById("isCaptain").value === "yes";
+      const playoffPoints = parseInt(document.getElementById("playoffResult").value);
+      const judgedAwardPoints = parseInt(document.getElementById("judgedAward").value);
+
+      if (isNaN(rank) || isNaN(numTeams) || isNaN(allianceNumber)) {
+        document.getElementById("resultado").innerText = "Por favor, preencha todos os campos obrigatórios.";
+        return;
+      }
+
+      const qualificationPoints = Math.round(
+        ((16 - 2) * ((numTeams - rank) / (numTeams - 1))) + 2
+      );
+
+      const alliancePoints = 21 - allianceNumber;
+      const allianceTotal = alliancePoints;
+
+      const totalPoints = qualificationPoints + allianceTotal + playoffPoints + judgedAwardPoints;
+
+      document.getElementById("resultado").innerText =
+        `Pontuação Total de Avanço: ${totalPoints} pontos`;
+    }
+  </script>
+</body>
+</html>
